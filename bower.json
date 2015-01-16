@@ -11,5 +11,9 @@
     "Paul Bill"
   ],
   "license": "MIT",
-  "homepage": "http://develodesign.co.uk"
+  "homepage": "http://develodesign.co.uk",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/develodesign/collapsible-grid"
+  }
 }
