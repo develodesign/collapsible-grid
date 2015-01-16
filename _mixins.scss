@@ -1,0 +1,136 @@
+// Clearfix
+// Source: http://nicolasgallagher.com/micro-clearfix-hack/
+//
+// For modern browsers
+// 1. The space content is one way to avoid an Opera bug when the
+//    contenteditable attribute is included anywhere else in the document.
+//    Otherwise it causes space to appear at the top and bottom of elements
+//    that are clearfixed.
+// 2. The use of `table` rather than `block` is only necessary if using
+//    `:before` to contain the top-margins of child elements.
+@mixin clearfix() {
+  &:before,
+  &:after {
+	content: ' '; /* 1 */
+	display: table; /* 2 */
+  }
+  &:after {
+	clear: both;
+  }
+}
+
+/**
+ * Box sizing mixin taken from twbs-bootstrap.
+ */
+@mixin box-sizing( $boxmodel ) {
+  -webkit-box-sizing: $boxmodel;
+  	 -moz-box-sizing: $boxmodel;
+  		  box-sizing: $boxmodel;
+}
+
+/**
+ * Create a grid item
+ *
+ * @param $number-of-columns {integer} Contains number of columns.
+ * @param $width {percentage} Expects percentage but can really be any valid css width value.
+ */
+@mixin grid-item( $number-of-columns, $width ){
+
+  width: #{$width};
+
+  @if( $number-of-columns > 1 ){
+
+	&:nth-child( #{$number-of-columns}n +1 )
+	{
+	  clear: left;
+	}
+  }
+}
+
+/**
+ * Create a collapsible grid item
+ *
+ * @param $number-of-columns {integer} contains number of columns.
+ * @param $min-width {integer} min width for the media query the grid item becomes active.
+ * @param $max-width {integer} if specified will add the max width to the media query.
+ */
+@mixin collapsible-grid-item( $number-of-columns, $min-width: null, $max-width: null ){
+
+  $width: get-column-width( $number-of-columns );
+
+  @if( $max-width and $min-width ){
+
+	@media (min-width: $min-width ) and (max-width: $max-width)
+	{
+	  @include grid-item( $number-of-columns, $width );
+	}
+  }
+
+  @else if( $min-width ) {
+
+	@media (min-width: $min-width ){
+
+	  @include grid-item( $number-of-columns, $width );
+	}
+  }
+
+  @else if( $max-width ) {
+
+	@media (max-width: $max-width){
+
+	  @include grid-item( $number-of-columns, $width );
+	}
+  }
+
+  @else {
+
+	@include grid-item( $number-of-columns, $width );
+  }
+}
+
+/**
+ * Create a grid name based on how the grid items will collapse. For example grid-4-to-2 will collapse from four columns
+ * to two.
+ */
+@mixin collapsible-grid( $points ){
+
+  $grid-name: get-grid-name( $points );
+
+  .#{$grid-name}
+  {
+	@include scut-clearfix();
+
+	> .#{$grid-item-name}
+	{
+	  float: left;
+
+	  @include box-sizing( border-box );
+	  @include scut-reset-border-box();
+
+	  $previous-width: null;
+	  $min-width: null;
+
+	  @each $point in $points {
+
+		$number-of-columns: nth( $point, 1 );
+
+		@if( length( $point ) > 1 ) {
+
+		  $min-width: nth($point, 2);
+
+		  @include collapsible-grid-item( $number-of-columns, $min-width, $previous-width );
+
+		  $previous-width: nth($point, 2);
+		}
+
+		@else if( $number-of-columns ) {
+
+		  $width: get-column-width( $number-of-columns );
+
+		  @include grid-item( $number-of-columns, $width );
+		}
+
+	  }
+	}
+  }
+}

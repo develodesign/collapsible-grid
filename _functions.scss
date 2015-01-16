@@ -1,0 +1,36 @@
+/**
+ * Returns a percentage based on the number of columns.
+ */
+@function get-column-width( $number-of-columns: 1 ){
+
+  @return percentage( 100 / $number-of-columns / 100 );
+}
+
+/**
+ * Work out what the grid should be called based on all the grid points
+ */
+@function get-grid-name( $points ){
+
+  $grid-name: $grid-name-prefix + '-';
+
+  $counter: 1;
+
+  // Get the class name of the grid
+  @each $point in $points {
+
+	@if( $point ){
+
+	  $grid-name: $grid-name + nth( $point, 1 );
+
+	  @if type_of( $point ) == 'list' and $counter != length( $points ) {
+
+		// Safe to presume this isn't the last grid point
+		$grid-name: $grid-name + '-to-';
+	  }
+	}
+
+	$counter: $counter+1;
+  }
+
+  @return $grid-name;
+}
