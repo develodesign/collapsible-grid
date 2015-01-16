@@ -1,0 +1,15 @@
+{
+  "name": "collapsible-grid",
+  "version": "0.0.1",
+  "description": "Sass mixin for creating collapsible grid rows and columns",
+  "main": "grid.scss",
+  "keywords": [
+    "sass",
+    "grid"
+  ],
+  "authors": [
+    "Paul Bill"
+  ],
+  "license": "MIT",
+  "homepage": "http://develodesign.co.uk"
+}
